@@ -3,7 +3,7 @@ name: Convert XLSX to JSON
 on:
   push:
     branches: [main]
-    paths: ['*.xlsx']
+    paths: ['*.xlsx', 'index.html']
   workflow_dispatch:
 
 permissions:
@@ -30,7 +30,8 @@ jobs:
           git checkout --orphan data-temp
           git rm -rf .
           mv *.json . 2>/dev/null || true
-          git add *.json
+          git checkout main -- index.html
+          git add *.json index.html
           git commit -m "Auto-convert xlsx to json"
           git branch -D data 2>/dev/null || true
           git branch -m data
