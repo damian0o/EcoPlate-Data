@@ -1,0 +1,113 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>EcoPlate Data</title>
+  <style>
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+      background: #f0f4f8;
+      color: #1a202c;
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      padding: 2rem 1rem;
+    }
+    header {
+      text-align: center;
+      margin-bottom: 2rem;
+    }
+    header h1 {
+      font-size: 1.8rem;
+      color: #2d3748;
+      margin-bottom: 0.3rem;
+    }
+    header p {
+      color: #718096;
+      font-size: 0.95rem;
+    }
+    header a {
+      color: #3182ce;
+      text-decoration: none;
+    }
+    header a:hover { text-decoration: underline; }
+    .card-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+      gap: 1rem;
+      width: 100%;
+      max-width: 800px;
+    }
+    .card {
+      background: #fff;
+      border-radius: 8px;
+      padding: 1.25rem;
+      box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+      transition: box-shadow 0.2s;
+    }
+    .card:hover { box-shadow: 0 4px 12px rgba(0,0,0,0.12); }
+    .card h2 {
+      font-size: 1.1rem;
+      margin-bottom: 0.5rem;
+      color: #2d3748;
+    }
+    .card .meta {
+      font-size: 0.85rem;
+      color: #718096;
+      margin-bottom: 0.75rem;
+    }
+    .card .actions a {
+      display: inline-block;
+      font-size: 0.85rem;
+      color: #3182ce;
+      text-decoration: none;
+      margin-right: 1rem;
+    }
+    .card .actions a:hover { text-decoration: underline; }
+    .empty {
+      text-align: center;
+      color: #a0aec0;
+      padding: 3rem;
+    }
+    footer {
+      margin-top: 3rem;
+      font-size: 0.8rem;
+      color: #a0aec0;
+    }
+  </style>
+</head>
+<body>
+  <header>
+    <h1>EcoPlate Data</h1>
+    <p>Experiment data repository &middot; <a href="https://damian0o.github.io/EcoPlate-Analyzer-Web/">Open Analyzer</a></p>
+  </header>
+  <div class="card-grid" id="files"></div>
+  <div class="empty" id="empty" hidden>No experiment files found.</div>
+  <footer>Auto-generated from <a href="https://github.com/damian0o/EcoPlate-Data" style="color:#718096">damian0o/EcoPlate-Data</a></footer>
+
+  <script>
+    fetch('index.json')
+      .then(r => r.json())
+      .then(files => {
+        const grid = document.getElementById('files');
+        if (!files.length) { document.getElementById('empty').hidden = false; return; }
+        files.forEach(f => {
+          const card = document.createElement('div');
+          card.className = 'card';
+          card.innerHTML = `
+            <h2>${f.name.replace('.json', '').replace(/_/g, ' ')}</h2>
+            <div class="meta">Source: ${f.source}</div>
+            <div class="actions">
+              <a href="${f.name}" target="_blank">View JSON</a>
+              <a href="https://damian0o.github.io/EcoPlate-Analyzer-Web/" target="_blank">Analyze</a>
+            </div>`;
+          grid.appendChild(card);
+        });
+      })
+      .catch(() => { document.getElementById('empty').hidden = false; });
+  </script>
+</body>
+</html>
